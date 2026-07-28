@@ -15,15 +15,10 @@ public class ExplosiveTarget : Target
         hitColliders = new Collider[maxColliders];
     }
 
-    public override void OnHit()
+    public override void DestroyTarget()
     {
-        Health -= 1;
-        if (Health <= 0)
-        {
-            Explode();
-            
-            DestroyTarget();
-        }
+        Explode();
+        base.DestroyTarget();
     }
 
     private void Explode()

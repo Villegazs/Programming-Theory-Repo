@@ -37,10 +37,6 @@ public class Target : MonoBehaviour
             playerTransform = player.transform;
         }
     }
-    protected virtual void Update()
-    {
-        
-    }
 
     private void FixedUpdate()
     {
