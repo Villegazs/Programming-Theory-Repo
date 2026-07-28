@@ -5,11 +5,12 @@ using UnityEngine;
 public class ArmoredTarget : Target
 {
     private MeshRenderer mRenderer;
-    private void Start()
+    protected override void Start()
     {
         Health = 2;
         mRenderer = GetComponent<MeshRenderer>();
         mRenderer.material.color = Color.gray;
+        base.Start();
     }
 
     // Polymorphism

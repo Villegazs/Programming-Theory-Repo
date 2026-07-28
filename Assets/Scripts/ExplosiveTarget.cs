@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,13 @@ using UnityEngine;
 public class ExplosiveTarget : Target
 {
     [SerializeField] private float explosionRadius = 5.0f;
+    private Collider[] hitColliders;
+    private const int maxColliders = 8;
+
+    private void Awake()
+    {
+        hitColliders = new Collider[maxColliders];
+    }
 
     public override void OnHit()
     {
@@ -22,17 +30,23 @@ public class ExplosiveTarget : Target
     {
         Debug.Log("White explosive activated");
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        int numColliders = Physics.OverlapSphereNonAlloc(transform.position, explosionRadius, hitColliders);
 
-        foreach (Collider nearbyObjects in colliders)
+        for (int i = 0; i < numColliders; i++)
         {
-            Target nearbyTarget = nearbyObjects.GetComponent<Target>();
-
+            Collider c = hitColliders[i];
+            
+            if(c.gameObject == this.gameObject) continue;
+            
+            Target nearbyTarget = c.GetComponent<Target>();
+            
             if (nearbyTarget != null && nearbyTarget != this)
             {
                 nearbyTarget.OnHit();
             }
+            
         }
+        
     }
     
 }
