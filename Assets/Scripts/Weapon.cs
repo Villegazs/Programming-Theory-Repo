@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 1. HERENCIA: Clase base para cualquier arma controlada por el jugador
+// 1. INHERITANCE: Base class for any weapon controlled by a player
 public abstract class Weapon : MonoBehaviour
 {
     // 3. ENCAPSULACIÓN: El arma controla su propia velocidad de disparo

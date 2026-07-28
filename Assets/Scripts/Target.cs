@@ -101,6 +101,10 @@ public class Target : MonoBehaviour
 // Agregamos "virtual" para que las clases hijas puedan modificar cómo se destruyen
     public virtual void DestroyTarget()
     {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddScore(pointValue);
+        }
         if(deathEffect != null)
             deathEffect.Play();
         

@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
     
     private void RotatePlayer()
     {
-        // Usamos rb.position en lugar de transform.position por seguridad física
+        // We use rb.position
         Vector3 directionToLook = pointToLook - rb.position;
         directionToLook.y = 0f;
 
@@ -93,17 +93,15 @@ public class PlayerController : MonoBehaviour
     // --- NUEVO: SISTEMA DE DISPARO ---
     private void HandleShooting()
     {
-        // Si el jugador mantiene presionado el clic izquierdo (botón 0) y tiene un arma
+        // If the player left click & has an equipped weapon can shoot
         if (Input.GetMouseButton(0) && equippedWeapon != null)
         {
-            // ABSTRACCIÓN: El jugador solo dice "intenta disparar", 
-            // el arma decide si ya pasó su cooldown.
+            // ABSTRACTION: The player try to shoot, the weapon has the final verdict
             equippedWeapon.TryShoot();
         }
     }
 
-    // 3. ENCAPSULACIÓN (Interfaz pública): Los enemigos llamarán a esta función
-    // cuando logren tocar al jugador. No pueden alterar "currentHealth" directamente.
+    // 3. ENCAPSULATION 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -117,11 +115,15 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        // ABSTRACCIÓN: Aquí ocultas todo el proceso de perder la partida
+        // ABSTRACTION
         Debug.Log("Game Over. Fin de la partida.");
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.EndGame();
+        }
         
-        // GameManager.Instance.GameOver(); // (Llamarías a tu GameManager aquí)
         
-        gameObject.SetActive(false); // Desaparecemos al jugador
+        gameObject.SetActive(false); // Dissapear the player
     }
 }
