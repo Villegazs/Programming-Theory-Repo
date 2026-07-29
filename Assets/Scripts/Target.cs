@@ -6,7 +6,7 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
     [SerializeField] private float pointValue =10;
-    // Encapsulation
+    // ENCAPSULATION
     public float PointValue { get => pointValue;}
     [SerializeField] private float health = 1;
 
@@ -70,10 +70,16 @@ public class Target : MonoBehaviour
     
     public virtual void OnHit()
     {
+        OnHit(1f);
+    }
+
+    // POLYMORPHISM
+    public virtual void OnHit(float damage)
+    {
         if(isDead) return;
         
-        health --;
-        if (health <= 0)
+        Health -= damage;
+        if (Health <= 0)
         {
             isDead = true;
             DestroyTarget();
@@ -98,7 +104,7 @@ public class Target : MonoBehaviour
         }
     }
 
-// Agregamos "virtual" para que las clases hijas puedan modificar cómo se destruyen
+    // ABSTRACTION
     public virtual void DestroyTarget()
     {
         if (GameManager.Instance != null)

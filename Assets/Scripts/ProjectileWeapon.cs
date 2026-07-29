@@ -5,16 +5,16 @@ public class ProjectileWeapon : Weapon
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
 
-    // 2. POLIMORFISMO: Implementamos el disparo directo
+    // POLYMORPHISM
     protected override void ExecuteAttack()
     {
-        // Creamos la bala
+        // Create the projectile
         GameObject bullet = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
         
         Projectile projectileScript = bullet.GetComponent<Projectile>();
         if (projectileScript != null)
         {
-            // Le decimos a la bala que viaje hacia donde apunta el cañón del arma
+            // Tell the projectile to travel in the direction the weapon barrel is pointing
             projectileScript.Initialize(firePoint.forward);
         }
     }

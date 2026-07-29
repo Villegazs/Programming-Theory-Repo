@@ -1,25 +1,24 @@
 using UnityEngine;
 
-// 1. INHERITANCE: Base class for any weapon controlled by a player
+// INHERITANCE
 public abstract class Weapon : MonoBehaviour
 {
-    // 3. ENCAPSULACIÓN: El arma controla su propia velocidad de disparo
+    // ENCAPSULATION
     [SerializeField] private float fireRate = 0.5f; 
     
     private float nextFireTime = 0f;
 
-    // Método público que el jugador llamará cuando haga clic
+    // Public method that the player will call when clicking
     public void TryShoot()
     {
-        // El arma verifica si ya pasó el tiempo de recarga
+        // The weapon checks whether the cooldown has already passed
         if (Time.time >= nextFireTime)
         {
             ExecuteAttack();
-            nextFireTime = Time.time + fireRate; // Calculamos el próximo disparo
+            nextFireTime = Time.time + fireRate; // Calculate the next shot
         }
     }
 
-    // 4. ABSTRACCIÓN: Obligamos a las armas hijas a definir cómo atacan,
-    // pero el jugador no necesita saber cómo lo hacen.
+    // ABSTRACTION
     protected abstract void ExecuteAttack();
 }

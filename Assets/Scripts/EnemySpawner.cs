@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    // 3. ENCAPSULACIÓN: Mantenemos el control del diseño oculto y seguro.
-    // Un arreglo (Array) para poner todos nuestros prefabs de enemigos (Cubo, Cilindro, Esfera)
+    // ENCAPSULATION
+    // An array to store all enemy prefabs
     [SerializeField] private GameObject[] enemyPrefabs; 
     
-    [SerializeField] private float spawnRadius = 15f; // Qué tan lejos del jugador nacen
-    [SerializeField] private float spawnRate = 2f;    // Tiempo entre cada aparición
+    [SerializeField] private float spawnRadius = 15f; // How far from the player enemies spawn
+    [SerializeField] private float spawnRate = 2f;    // Time between spawns
     
     private Transform playerTransform;
     private float nextSpawnTime = 0f;
 
     private void Start()
     {
-        // Buscamos al jugador una sola vez al inicio para saber cuál es el centro de aparición
+        // Find the player once at the start to determine the spawn center
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -24,10 +24,10 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        // Si el jugador fue destruido, dejamos de generar enemigos
+        // If the player was destroyed, stop spawning enemies
         if (playerTransform == null || !playerTransform.gameObject.activeInHierarchy) return;
 
-        // ABSTRACCIÓN: El temporizador es simple y llama a la función compleja.
+        // ABSTRACTION
         if (Time.time >= nextSpawnTime)
         {
             SpawnEnemy();
@@ -37,27 +37,26 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        // 1. Elegimos un enemigo al azar de nuestra lista
+        // 1. Choose an enemy at random from our list
         int randomIndex = Random.Range(0, enemyPrefabs.Length);
         GameObject enemyToSpawn = enemyPrefabs[randomIndex];
 
-        // 2. Calculamos una posición aleatoria en un círculo alrededor del jugador
+        // 2. Calculate a random position in a circle around the player
         Vector3 spawnPosition = GetRandomPositionAroundPlayer();
 
-        // 3. Instanciamos al enemigo
-        // POLIMORFISMO EN DISEÑO: Al Spawner no le importa si acaba de crear un NormalTarget 
-        // o un ExplosiveTarget. Los trata a todos como simples GameObjects.
+        // 3. Instantiate the enemy
+        // POLYMORPHISM
         Instantiate(enemyToSpawn, spawnPosition, Quaternion.identity);
     }
 
     private Vector3 GetRandomPositionAroundPlayer()
     {
-        // Random.insideUnitCircle genera un punto 2D aleatorio (X, Y) dentro de un círculo.
-        // .normalized empuja ese punto exactamente al borde del círculo.
+        // Random.insideUnitCircle generates a random 2D point (X, Y) inside a circle.
+        // .normalized pushes that point exactly to the edge of the circle.
         Vector2 randomPoint2D = Random.insideUnitCircle.normalized * spawnRadius;
 
-        // Convertimos ese punto 2D (X, Y) a nuestro mundo 3D (X, 0, Z)
-        // y se lo sumamos a la posición actual del jugador.
+        // Convert that 2D point (X, Y) to our 3D world (X, 0, Z)
+        // and add it to the player's current position.
         Vector3 spawnOffset = new Vector3(randomPoint2D.x, 0f, randomPoint2D.y);
         
         return playerTransform.position + spawnOffset;

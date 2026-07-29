@@ -1,11 +1,10 @@
 using UnityEngine;
 
-// Requerimos que el objeto tenga un Rigidbody para que las físicas funcionen
+// Required that the object has a Rigidbody for physics to work
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
-    // 3. ENCAPSULACIÓN: Protegemos la velocidad y la vida.
-    // Solo se pueden ajustar desde el Inspector de Unity, no desde otros scripts.
+    // ENCAPSULATION
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private int maxHealth = 3;
 
@@ -22,7 +21,7 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody>();
         
-        // Evitamos que el jugador se caiga o rote de forma extraña si choca con algo
+        // Prevent the player from falling or rotating strangely when colliding with something
         rb.freezeRotation = true; 
         
         mainCamera = Camera.main;
@@ -30,7 +29,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // 4. ABSTRACCIÓN: Mantenemos el Update limpio. Solo le decimos "lee los controles".
+        // ABSTRACTION
         ProcessInputs();
         CalculateMouseAim();
         HandleShooting();
@@ -38,25 +37,24 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // ABSTRACCIÓN: Aplicamos el movimiento en FixedUpdate, que es el ciclo 
-        // correcto para manejar físicas en Unity sin que haya tirones.
+        // ABSTRACTION
         MovePlayer();
         RotatePlayer();
     }
 
     private void ProcessInputs()
     {
-        // Captura las teclas WASD o las flechas direccionales
+        // Capture WASD keys or arrow keys
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveZ = Input.GetAxisRaw("Vertical");
 
-        // .normalized asegura que moverse en diagonal no te haga ir más rápido
+        // .normalized ensures diagonal movement does not make the character move faster
         movementInput = new Vector3(moveX, 0f, moveZ).normalized;
     }
 
     private void MovePlayer()
     {
-        // Calculamos la nueva posición y le decimos al motor de físicas que nos mueva allí
+        // Calculate the new position and tell the physics engine to move us there
         Vector3 newPosition = rb.position + movementInput * moveSpeed * Time.fixedDeltaTime;
         rb.MovePosition(newPosition);
     }
@@ -67,7 +65,7 @@ public class PlayerController : MonoBehaviour
         
         if (groundPlane.Raycast(cameraRay, out float rayLength))
         {
-            // Solo guardamos las coordenadas
+            // Only store the coordinates
             pointToLook = cameraRay.GetPoint(rayLength);
         }
     }
@@ -78,34 +76,34 @@ public class PlayerController : MonoBehaviour
         Vector3 directionToLook = pointToLook - rb.position;
         directionToLook.y = 0f;
 
-        // sqrMagnitude es más rápido de calcular que Vector3.Distance
-        // Esto evita el jittering si el cursor está exactamente sobre el jugador
+        // sqrMagnitude is faster to compute than Vector3.Distance
+        // This prevents jittering when the cursor is exactly over the player
         if (directionToLook.sqrMagnitude > 0.05f) 
         {
-            // Creamos la rotación correcta
+            // Create the correct rotation
             Quaternion targetRotation = Quaternion.LookRotation(directionToLook);
             
-            // Le decimos al motor de físicas que rote el objeto de forma segura
+            // Tell the physics engine to rotate the object safely
             rb.MoveRotation(targetRotation); 
         }
     }
     
-    // --- NUEVO: SISTEMA DE DISPARO ---
+    // --- NEW: SHOOTING SYSTEM ---
     private void HandleShooting()
     {
-        // If the player left click & has an equipped weapon can shoot
+        // If the player left-clicks and has an equipped weapon, they can shoot
         if (Input.GetMouseButton(0) && equippedWeapon != null)
         {
-            // ABSTRACTION: The player try to shoot, the weapon has the final verdict
+            // ABSTRACTION
             equippedWeapon.TryShoot();
         }
     }
 
-    // 3. ENCAPSULATION 
+    // ENCAPSULATION
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        Debug.Log($"¡Jugador herido! Vida restante: {currentHealth}");
+        Debug.Log($"Player hit! Remaining health: {currentHealth}");
 
         if (currentHealth <= 0)
         {
@@ -116,7 +114,7 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         // ABSTRACTION
-        Debug.Log("Game Over. Fin de la partida.");
+        Debug.Log("Game Over. End of the match.");
 
         if (GameManager.Instance != null)
         {
@@ -124,6 +122,6 @@ public class PlayerController : MonoBehaviour
         }
         
         
-        gameObject.SetActive(false); // Dissapear the player
+        gameObject.SetActive(false); // Make the player disappear
     }
 }

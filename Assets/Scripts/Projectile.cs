@@ -4,41 +4,37 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    // 3. ENCAPSULACIÓN: Propiedades de vuelo de la bala
+    // ENCAPSULATION
     [SerializeField] private float speed = 15f;
-    [SerializeField] private float lifetime = 3f; // Se destruye si no golpea nada
+    [SerializeField] private float lifetime = 3f; // Destroy 
     
     private Vector3 moveDirection;
 
-    // Método público para que el arma le diga hacia dónde volar al momento de nacer
+    // ABSTRACTION
     public void Initialize(Vector3 direction)
     {
         moveDirection = direction.normalized;
-        
-        // ABSTRACCIÓN: Limpieza automática. Le decimos a Unity que destruya 
-        // este objeto después de 'lifetime' segundos si se pierde en el vacío.
         Destroy(gameObject, lifetime);
     }
 
     private void Update()
     {
-        // La bala vuela de forma autónoma en cada frame
+        // The projectile flies on its own each frame
         transform.position += moveDirection * speed * Time.deltaTime;
     }
 
-    // 2. POLIMORFISMO EN ACCIÓN: Detección de colisiones
+    // POLYMORPHISM
     private void OnTriggerEnter(Collider other)
     {
-        // Verificamos si lo que golpeamos tiene la clase base Target
+        // Check whether the object we hit has the base class Target
         Target enemy = other.GetComponent<Target>();
         Debug.Log("Detect a collision with " + other.name);
         if (enemy != null)
         {
-            // ¡Aquí ocurre la magia! No importa si es el Cubo Normal o el Cilindro Blindado.
-            // La bala solo llama a OnHit() y el enemigo reacciona según su propia programación.
+            // The projectile only calls OnHit(), and the enemy reacts according to its own logic.
             enemy.OnHit();
             
-            // La bala se destruye a sí misma tras el impacto
+            // The projectile destroys itself after the hit
             Destroy(gameObject);
         }
     }

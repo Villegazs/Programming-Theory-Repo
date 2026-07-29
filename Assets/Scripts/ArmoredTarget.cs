@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// INHERITANCE
 public class ArmoredTarget : Target
 {
     private MeshRenderer mRenderer;
@@ -13,7 +14,7 @@ public class ArmoredTarget : Target
         base.Start();
     }
 
-    // Polymorphism
+    // POLYMORPHISM
     public override void OnHit()
     {
         base.OnHit();

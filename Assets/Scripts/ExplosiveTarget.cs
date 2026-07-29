@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 1. Inheritance: Explosive target inherits the health and points from target
+// INHERITANCE
 public class ExplosiveTarget : Target
 {
     [SerializeField] private float explosionRadius = 5.0f;
